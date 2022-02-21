@@ -109,63 +109,6 @@ class GridSystem {
         }
         break;
     }
-    /*if (keyCode === 37) {
-      event.preventDefault();
-      if (this.#isValidMove(0, -1) && this.#isAHerb(0, -1)) {
-        this.#updateMatrix(this.player.y, this.player.x, 0);
-        this.#updateMatrix(this.player.y, this.player.x - 1, 2);
-        this.health = 3;
-        this.player.x--;
-        this.render();
-      } else if (this.#isValidMove(0, -1)) {
-        this.#updateMatrix(this.player.y, this.player.x, 0);
-        this.#updateMatrix(this.player.y, this.player.x - 1, 2);
-        this.player.x--;
-        this.render();
-      }
-    } else if (keyCode === 39) {
-      event.preventDefault();
-      if (this.#isValidMove(0, 1) && this.#isAHerb(0, 1)) {
-        this.#updateMatrix(this.player.y, this.player.x, 0);
-        this.#updateMatrix(this.player.y, this.player.x + 1, 2);
-        this.health = 3;
-        this.player.x++;
-        this.render();
-      } else if (this.#isValidMove(0, 1)) {
-        this.#updateMatrix(this.player.y, this.player.x, 0);
-        this.#updateMatrix(this.player.y, this.player.x + 1, 2);
-        this.player.x++;
-        this.render();
-      }
-    } else if (keyCode === 38) {
-      event.preventDefault();
-      if (this.#isValidMove(-1, 0) && this.#isAHerb(-1, 0)) {
-        this.#updateMatrix(this.player.y, this.player.x, 0);
-        this.#updateMatrix(this.player.y - 1, this.player.x, 2);
-        this.health = 3;
-        this.player.y--;
-        this.render();
-      } else if (this.#isValidMove(-1, 0)) {
-        this.#updateMatrix(this.player.y, this.player.x, 0);
-        this.#updateMatrix(this.player.y - 1, this.player.x, 2);
-        this.player.y--;
-        this.render();
-      }
-    } else if (keyCode === 40) {
-      event.preventDefault();
-      if (this.#isValidMove(1, 0) && this.#isAHerb(1, 0)) {
-        this.#updateMatrix(this.player.y, this.player.x, 0);
-        this.#updateMatrix(this.player.y + 1, this.player.x, 2);
-        this.health = 3;
-        this.player.y++;
-        this.render();
-      } else if (this.#isValidMove(1, 0)) {
-        this.#updateMatrix(this.player.y, this.player.x, 0);
-        this.#updateMatrix(this.player.y + 1, this.player.x, 2);
-        this.player.y++;
-        this.render();
-      }
-    }*/
   };
 
   //center the window
@@ -240,11 +183,24 @@ class GridSystem {
         );
       }
     }
+  }
 
-    //Health display
+  // health update
+  loop() {
+    window.requestAnimationFrame(() => {
+      this.draw();
+      this.loop();
+    });
+  }
+  drawHealth() {
     this.uiContext.font = '20px monospace';
     this.uiContext.fillStyle = 'white';
-    this.uiContext.fillText('HEALTH:' + this.health, 20, 30);
+    this.uiContext.fillText(`Health: ${this.health}`, 20, 30);
+  }
+
+  draw() {
+    this.uiContext.clearRect(0, 0, 420, 580);
+    this.drawHealth();
   }
 }
 
@@ -263,3 +219,4 @@ const gridMatrix = [
 
 const gridSystem = new GridSystem(gridMatrix, 1, 1);
 gridSystem.render();
+gridSystem.loop();
