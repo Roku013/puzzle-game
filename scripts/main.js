@@ -1,3 +1,4 @@
+//base for creating a level/grid
 class GridSystem {
   constructor(matrix, playerX, playerY) {
     this.matrix = matrix;
@@ -12,26 +13,34 @@ class GridSystem {
     //life tracking
     this.life = 10;
 
+    //button trigger
     document.addEventListener('keydown', this.#movePlayer);
   }
 
+  //check if the move is valid by checking the number of the tile on which the player is moving into
   #isValidMove(x, y) {
-    if (this.matrix[this.player.y + y][this.player.x + x] === 0) {
+    if (
+      this.matrix[this.player.y + y][this.player.x + x] === 0 ||
+      this.matrix[this.player.y + y][this.player.x + x] === 3
+    ) {
       return true;
     }
     return false;
   }
 
+  //update the matrix grid every time player moves
   #updateMatrix(y, x, val) {
     this.matrix[y][x] = val;
   }
 
+  // player movement. If the move is valid, chenge the number of the last tile to 0(empty), and change the number of the tile the player is now on to 2(player)
   #movePlayer = ({ keyCode }) => {
     if (keyCode === 37) {
       event.preventDefault();
       if (this.#isValidMove(-1, 0)) {
         this.#updateMatrix(this.player.y, this.player.x, 0);
         this.#updateMatrix(this.player.y, this.player.x - 1, 2);
+        this.life--;
         this.player.x--;
         this.render();
       }
@@ -62,6 +71,7 @@ class GridSystem {
     }
   };
 
+  //center the window
   #getCenter(w, h) {
     return {
       x: window.innerWidth / 2 - w / 2 + 'px',
@@ -69,6 +79,7 @@ class GridSystem {
     };
   }
 
+  //all the canvas stuff
   #getContext(w, h, color = '#111', isTransparent = false) {
     this.canvas = document.createElement('canvas');
     this.context = this.canvas.getContext('2d');
@@ -132,6 +143,7 @@ class GridSystem {
   }
 }
 
+//level example for testing
 const gridMatrix = [
   [1, 1, 1, 1, 1, 1, 1],
   [1, 0, 0, 0, 0, 0, 1],
