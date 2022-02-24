@@ -1,4 +1,4 @@
-//base for creating a level/grid
+//base for creating a level
 class GridSystem {
   constructor(matrix, playerX, playerY) {
     this.matrix = matrix;
@@ -7,12 +7,22 @@ class GridSystem {
     this.topContext = this.#getContext(0, 0, '#111', true); //Player and enviroment
     this.cellSize = 40;
     this.padding = 2;
-    this.player = { x: playerX, y: playerY, color: 'orange' };
+    this.player = { x: playerX, y: playerY, sprite: 'orange' };
     this.matrix[playerY][playerX] = 2;
-    this.health = 10;
+    this.health = 7;
 
     //button trigger
     document.addEventListener('keydown', this.#movePlayer);
+  }
+
+  //check if health is 0
+  #checkHealth() {
+    if (this.health === 0) {
+      console.log('dead');
+
+      //level.render();
+      //level.loop();
+    }
   }
 
   //check if the move is valid by checking the number of the tile on which the player is moving into
@@ -27,7 +37,7 @@ class GridSystem {
     return false;
   }
 
-  //check if the player moves into a healing herb and if so, change Health
+  //check if the player moves into a healing herb
   #isAHerb(y, x) {
     if (this.matrix[this.player.y + y][this.player.x + x] === 3) {
       return true;
@@ -49,7 +59,7 @@ class GridSystem {
         if (this.#isValidMove(0, -1) && this.#isAHerb(0, -1)) {
           this.#updateMatrix(this.player.y, this.player.x, 0);
           this.#updateMatrix(this.player.y, this.player.x - 1, 2);
-          this.health = 3;
+          this.health += 3;
           this.player.x--;
           this.render();
         } else if (this.#isValidMove(0, -1)) {
@@ -57,6 +67,7 @@ class GridSystem {
           this.#updateMatrix(this.player.y, this.player.x - 1, 2);
           this.health--;
           this.player.x--;
+          this.#checkHealth();
           this.render();
         }
         break;
@@ -65,7 +76,7 @@ class GridSystem {
         if (this.#isValidMove(0, 1) && this.#isAHerb(0, 1)) {
           this.#updateMatrix(this.player.y, this.player.x, 0);
           this.#updateMatrix(this.player.y, this.player.x + 1, 2);
-          this.health = 3;
+          this.health += 3;
           this.player.x++;
           this.render();
         } else if (this.#isValidMove(0, 1)) {
@@ -73,6 +84,7 @@ class GridSystem {
           this.#updateMatrix(this.player.y, this.player.x + 1, 2);
           this.health--;
           this.player.x++;
+          this.#checkHealth();
           this.render();
         }
         break;
@@ -81,7 +93,7 @@ class GridSystem {
         if (this.#isValidMove(-1, 0) && this.#isAHerb(-1, 0)) {
           this.#updateMatrix(this.player.y, this.player.x, 0);
           this.#updateMatrix(this.player.y - 1, this.player.x, 2);
-          this.health = 3;
+          this.health += 3;
           this.player.y--;
           this.render();
         } else if (this.#isValidMove(-1, 0)) {
@@ -89,6 +101,7 @@ class GridSystem {
           this.#updateMatrix(this.player.y - 1, this.player.x, 2);
           this.health--;
           this.player.y--;
+          this.#checkHealth();
           this.render();
         }
         break;
@@ -97,7 +110,7 @@ class GridSystem {
         if (this.#isValidMove(1, 0) && this.#isAHerb(1, 0)) {
           this.#updateMatrix(this.player.y, this.player.x, 0);
           this.#updateMatrix(this.player.y + 1, this.player.x, 2);
-          this.health = 3;
+          this.health += 3;
           this.player.y++;
           this.render();
         } else if (this.#isValidMove(1, 0)) {
@@ -105,6 +118,7 @@ class GridSystem {
           this.#updateMatrix(this.player.y + 1, this.player.x, 2);
           this.health--;
           this.player.y++;
+          this.#checkHealth();
           this.render();
         }
         break;
@@ -159,17 +173,20 @@ class GridSystem {
         const cellVal = this.matrix[row][col];
         let color = '#111';
 
+        let playerAvatar = new Image();
+        playerAvatar.src = '/images/character-down.png';
+
         switch (cellVal) {
           case 1: //outer walls
             color = '#4488FF';
             break;
           case 2: //player
-            color = this.player.color;
+            color = this.player.sprite;
             break;
           case 3: //herb
             color = 'green';
             break;
-          case 9: //finish
+          case 9: //finish line
             color = 'red';
             break;
         }
@@ -192,6 +209,7 @@ class GridSystem {
       this.loop();
     });
   }
+
   drawHealth() {
     this.uiContext.font = '20px monospace';
     this.uiContext.fillStyle = 'white';
@@ -205,7 +223,7 @@ class GridSystem {
 }
 
 //level example for testing
-const gridMatrix = [
+const levelZero = [
   [1, 1, 1, 1, 1, 1, 1, 1],
   [1, 0, 0, 0, 0, 0, 0, 1],
   [1, 0, 0, 0, 0, 0, 0, 1],
@@ -217,6 +235,21 @@ const gridMatrix = [
   [1, 1, 1, 1, 1, 9, 1, 1]
 ];
 
-const gridSystem = new GridSystem(gridMatrix, 1, 1);
-gridSystem.render();
-gridSystem.loop();
+let levelZeroPositionX = 1;
+let levelZeroPositionY = 1;
+
+const levelZeroTwo = [
+  [1, 0, 0, 0, 0, 0, 0, 1],
+  [1, 0, 0, 0, 0, 0, 0, 1],
+  [1, 0, 0, 0, 0, 0, 0, 1],
+  [1, 0, 0, 0, 0, 0, 1, 1],
+  [1, 0, 1, 0, 1, 0, 1, 1],
+  [1, 0, 0, 0, 1, 3, 1, 1],
+  [1, 0, 1, 1, 1, 1, 1, 1],
+  [1, 0, 0, 0, 0, 0, 0, 1],
+  [1, 1, 1, 1, 1, 9, 1, 1]
+];
+
+let level = new GridSystem(levelZero, levelZeroPositionX, levelZeroPositionY);
+level.render();
+level.loop();
