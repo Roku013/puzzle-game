@@ -1,4 +1,4 @@
-class Character {
+/*class Character {
   constructor(game, x, y, health) {
     this.game = game;
     this.x = x;
@@ -79,3 +79,4 @@ movePlayer = () => {
       break;
   }
 };
+*/

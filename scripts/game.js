@@ -1,3 +1,24 @@
+const smallHerb = new Image();
+smallHerb.src = '/images/smallherb2.png';
+
+const bigHerb = new Image();
+bigHerb.src = '/images/bigherb2.png';
+
+const bigHerbTwo = new Image();
+bigHerbTwo.src = '/images/bigherb2.png';
+
+function itemLocation(array2d, itemtofind) {
+  index = [].concat.apply([], [].concat.apply([], array2d)).indexOf(itemtofind);
+  if (index === -1) {
+    return false;
+  }
+
+  numColumns = array2d[0].length;
+  row = parseInt(index / numColumns);
+  col = index % numColumns;
+  return [row, col];
+}
+
 //base for creating a level
 class Game {
   constructor(canvas, levels, matrix, playerX, playerY) {
@@ -5,18 +26,23 @@ class Game {
     this.levels = levels;
     this.context = canvas.getContext('2d');
     // this.character = new Character(this);
-    this.cellSize = 40;
+    this.cellSize = 50;
     this.padding = 2;
     this.matrix = matrix;
+    this.initialMatrix = matrix;
     this.level = 0;
     this.playerStartingX = playerX;
     this.playerStartingY = playerY;
-
+    this.smallHerbLocation = itemLocation(this.levels[this.level], 3);
+    this.bigHerbLocation = itemLocation(this.levels[this.level], 4);
+    this.bigHerbTwoLocation = itemLocation(this.levels[this.level], 5);
     this.handleControls();
   }
 
   reset() {
-    this.health = 6;
+    this.health = 3;
+    this.matrix = levels[this.level];
+    console.log(this.matrix);
     this.player = new Player(this, this.playerStartingX, this.playerStartingY);
   }
 
@@ -35,6 +61,7 @@ class Game {
     const matrix = this.levels[this.level];
     this.matrix = matrix;
     this.reset();
+    console.log(this.level);
   }
 
   handleControls() {
@@ -45,7 +72,7 @@ class Game {
 
   //check if health is 0
   checkHealth() {
-    if (this.health === 0) {
+    if (this.health <= 0) {
       this.lose();
     }
   }
@@ -53,13 +80,29 @@ class Game {
   //check if the move is valid by checking the number of the tile on which the player is moving into
   isValidMove(x, y) {
     const cellVal = this.matrix[this.player.y + y][this.player.x + x];
-    return cellVal === 0 || cellVal === 3 || cellVal === 9;
+    return (
+      cellVal === 0 ||
+      cellVal === 3 ||
+      cellVal === 4 ||
+      cellVal === 5 ||
+      cellVal === 9
+    );
   }
 
   //check if the player moves into a healing herb
-  isAHerb(x, y) {
+  smallHerb(x, y) {
     const cellVal = this.matrix[this.player.y + y][this.player.x + x];
     return cellVal === 3;
+  }
+
+  bigHerb(x, y) {
+    const cellVal = this.matrix[this.player.y + y][this.player.x + x];
+    return cellVal === 4;
+  }
+
+  bigHerbTwo(x, y) {
+    const cellVal = this.matrix[this.player.y + y][this.player.x + x];
+    return cellVal === 5;
   }
 
   isWin(x, y) {
@@ -98,14 +141,23 @@ class Game {
 
     const isValid = this.isValidMove(xMovement, yMovement);
     const isWin = this.isWin(xMovement, yMovement);
+    const isASmallHerb = this.smallHerb(xMovement, yMovement);
+    const isABigHerb = this.bigHerb(xMovement, yMovement);
+    const isABigHerbTwo = this.bigHerbTwo(xMovement, yMovement);
 
     if (isWin) {
       this.win();
     } else if (isValid) {
       this.player.y += yMovement;
       this.player.x += xMovement;
-      if (this.isAHerb(xMovement, yMovement)) {
-        this.health += 3;
+      if (isASmallHerb) {
+        this.health = 3;
+        this.updateMatrix(this.player.x, this.player.y, 0);
+      } else if (isABigHerb) {
+        this.health = 5;
+        this.updateMatrix(this.player.x, this.player.y, 0);
+      } else if (isABigHerbTwo) {
+        this.health = 5;
         this.updateMatrix(this.player.x, this.player.y, 0);
       } else {
         this.health--;
@@ -130,35 +182,67 @@ class Game {
       for (let col = 0; col < this.matrix[row].length; col++) {
         const cellVal = this.matrix[row][col];
 
-        let color = '#111';
+        let sprite = '';
 
         switch (cellVal) {
-          case 1: //outer walls
-            color = '#4488FF';
+          case 0:
+            sprite = 'black';
             break;
-          case 3: //herb
-            color = 'green';
+          case 1: //outer walls
+            sprite = '#4488FF';
+            break;
+          case 2: //outer walls
+            sprite = 'darkblue';
+            break;
+          case 3: //small herb
+            sprite = this.context.drawImage(
+              smallHerb,
+              this.smallHerbLocation[1] * (this.cellSize + this.padding),
+              this.smallHerbLocation[0] * (this.cellSize + this.padding),
+              this.cellSize,
+              this.cellSize
+            );
+            break;
+          case 4: //big herb
+            sprite = this.context.drawImage(
+              bigHerb,
+              this.bigHerbLocation[1] * (this.cellSize + this.padding),
+              this.bigHerbLocation[0] * (this.cellSize + this.padding),
+              this.cellSize,
+              this.cellSize
+            );
+            break;
+          case 5:
+            sprite = this.context.drawImage(
+              bigHerbTwo,
+              this.bigHerbTwoLocation[1] * (this.cellSize + this.padding),
+              this.bigHerbTwoLocation[0] * (this.cellSize + this.padding),
+              this.cellSize,
+              this.cellSize
+            );
             break;
           case 9: //finish line
-            color = 'red';
+            sprite = 'red';
             break;
         }
-
-        this.context.fillStyle = color;
-        this.context.fillRect(
-          col * (this.cellSize + this.padding),
-          row * (this.cellSize + this.padding),
-          this.cellSize,
-          this.cellSize
-        );
+        if (cellVal !== 3 && cellVal !== 4 && cellVal !== 5) {
+          this.context.fillStyle = sprite;
+          this.context.fillRect(
+            col * (this.cellSize + this.padding),
+            row * (this.cellSize + this.padding),
+            this.cellSize,
+            this.cellSize
+          );
+        }
       }
     }
   }
 
   drawHealth() {
-    this.context.font = '20px monospace';
+    this.context.font = '25px monospace';
     this.context.fillStyle = 'white';
     this.context.fillText(`Health: ${this.health}`, 20, 30);
+    this.context.fillText(`Level: ${this.level}`, 200, 30);
   }
 
   draw() {
