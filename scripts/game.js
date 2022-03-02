@@ -177,7 +177,7 @@ class Game {
       this.runLogic();
       this.draw();
       this.loop();
-    }, 1000 / 4);
+    });
   }
 
   drawBackground() {
