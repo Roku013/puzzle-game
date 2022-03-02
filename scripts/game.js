@@ -1,3 +1,4 @@
+// images
 const smallHerb = new Image();
 smallHerb.src = '/images/smallherb2.png';
 
@@ -7,52 +8,65 @@ bigHerb.src = '/images/bigherb2.png';
 const bigHerbTwo = new Image();
 bigHerbTwo.src = '/images/bigherb2.png';
 
-function itemLocation(array2d, itemtofind) {
-  index = [].concat.apply([], [].concat.apply([], array2d)).indexOf(itemtofind);
+const grass = new Image();
+grass.src = '/images/grass.png';
+
+const grassTwo = new Image();
+grassTwo.src = '/images/grass.png';
+
+const water = new Image();
+water.src = '/images/water.png';
+
+const startScreen = new Image();
+startScreen.src = '/images/startscreen.png';
+
+// audio
+const herbHeal = new Audio('/sounds/BeepBox-Song.mp3');
+const mainSong = new Audio('/sounds/mainsong.mp3');
+
+/*function itemLocation(array2d, itemToFind) {
+  index = [].concat.apply([], [].concat.apply([], array2d)).indexOf(itemToFind);
   if (index === -1) {
     return false;
   }
-
   numColumns = array2d[0].length;
   row = parseInt(index / numColumns);
   col = index % numColumns;
   return [row, col];
-}
+}*/
 
 //base for creating a level
 class Game {
-  constructor(canvas, levels, matrix, playerX, playerY) {
+  constructor(canvas, levels, matrix, playerX, playerY, lost = false) {
     this.canvas = canvas;
     this.levels = levels;
     this.context = canvas.getContext('2d');
-    // this.character = new Character(this);
-    this.cellSize = 50;
-    this.padding = 2;
+    this.cellSize = 64;
+    this.padding = 0;
     this.matrix = matrix;
-    this.initialMatrix = matrix;
     this.level = 0;
     this.playerStartingX = playerX;
     this.playerStartingY = playerY;
-    this.smallHerbLocation = itemLocation(this.levels[this.level], 3);
-    this.bigHerbLocation = itemLocation(this.levels[this.level], 4);
-    this.bigHerbTwoLocation = itemLocation(this.levels[this.level], 5);
     this.handleControls();
+    this.lost = lost;
   }
 
   reset() {
     this.health = 3;
+    this.lost = false;
     this.matrix = levels[this.level];
-    console.log(this.matrix);
     this.player = new Player(this, this.playerStartingX, this.playerStartingY);
   }
 
   start() {
+    //mainSong.play();
     this.reset();
     this.loop();
   }
 
   lose() {
-    this.level = 0;
+    this.lost = true;
+    ifLostLevel(levels[this.level], this.lost, this.level);
     this.reset();
   }
 
@@ -61,7 +75,6 @@ class Game {
     const matrix = this.levels[this.level];
     this.matrix = matrix;
     this.reset();
-    console.log(this.level);
   }
 
   handleControls() {
@@ -80,13 +93,7 @@ class Game {
   //check if the move is valid by checking the number of the tile on which the player is moving into
   isValidMove(x, y) {
     const cellVal = this.matrix[this.player.y + y][this.player.x + x];
-    return (
-      cellVal === 0 ||
-      cellVal === 3 ||
-      cellVal === 4 ||
-      cellVal === 5 ||
-      cellVal === 9
-    );
+    return cellVal === 0 || cellVal === 3 || cellVal === 4 || cellVal === 9;
   }
 
   //check if the player moves into a healing herb
@@ -98,11 +105,6 @@ class Game {
   bigHerb(x, y) {
     const cellVal = this.matrix[this.player.y + y][this.player.x + x];
     return cellVal === 4;
-  }
-
-  bigHerbTwo(x, y) {
-    const cellVal = this.matrix[this.player.y + y][this.player.x + x];
-    return cellVal === 5;
   }
 
   isWin(x, y) {
@@ -143,20 +145,21 @@ class Game {
     const isWin = this.isWin(xMovement, yMovement);
     const isASmallHerb = this.smallHerb(xMovement, yMovement);
     const isABigHerb = this.bigHerb(xMovement, yMovement);
-    const isABigHerbTwo = this.bigHerbTwo(xMovement, yMovement);
 
     if (isWin) {
+      herbHeal.play();
       this.win();
     } else if (isValid) {
       this.player.y += yMovement;
       this.player.x += xMovement;
       if (isASmallHerb) {
+        herbHeal.load();
+        herbHeal.play();
         this.health = 3;
         this.updateMatrix(this.player.x, this.player.y, 0);
       } else if (isABigHerb) {
-        this.health = 5;
-        this.updateMatrix(this.player.x, this.player.y, 0);
-      } else if (isABigHerbTwo) {
+        herbHeal.load();
+        herbHeal.play();
         this.health = 5;
         this.updateMatrix(this.player.x, this.player.y, 0);
       } else {
@@ -174,7 +177,7 @@ class Game {
       this.runLogic();
       this.draw();
       this.loop();
-    });
+    }, 1000 / 4);
   }
 
   drawBackground() {
@@ -182,57 +185,89 @@ class Game {
       for (let col = 0; col < this.matrix[row].length; col++) {
         const cellVal = this.matrix[row][col];
 
-        let sprite = '';
+        //let sprite = '';
 
         switch (cellVal) {
           case 0:
-            sprite = 'black';
-            break;
-          case 1: //outer walls
-            sprite = '#4488FF';
-            break;
-          case 2: //outer walls
-            sprite = 'darkblue';
-            break;
-          case 3: //small herb
-            sprite = this.context.drawImage(
-              smallHerb,
-              this.smallHerbLocation[1] * (this.cellSize + this.padding),
-              this.smallHerbLocation[0] * (this.cellSize + this.padding),
+            let zero = this.context.createPattern(grass, 'repeat');
+            this.context.fillStyle = zero;
+            this.context.fillRect(
+              col * (this.cellSize + this.padding),
+              row * (this.cellSize + this.padding),
               this.cellSize,
               this.cellSize
             );
             break;
-          case 4: //big herb
-            sprite = this.context.drawImage(
-              bigHerb,
-              this.bigHerbLocation[1] * (this.cellSize + this.padding),
-              this.bigHerbLocation[0] * (this.cellSize + this.padding),
+          case 1:
+            let one = this.context.createPattern(water, 'repeat');
+            this.context.fillStyle = one;
+            this.context.fillRect(
+              col * (this.cellSize + this.padding),
+              row * (this.cellSize + this.padding),
               this.cellSize,
               this.cellSize
             );
             break;
-          case 5:
-            sprite = this.context.drawImage(
-              bigHerbTwo,
-              this.bigHerbTwoLocation[1] * (this.cellSize + this.padding),
-              this.bigHerbTwoLocation[0] * (this.cellSize + this.padding),
+          case 2:
+            let two = this.context.createPattern(water, 'repeat');
+            this.context.fillStyle = two;
+            this.context.fillRect(
+              col * (this.cellSize + this.padding),
+              row * (this.cellSize + this.padding),
               this.cellSize,
               this.cellSize
             );
             break;
-          case 9: //finish line
-            sprite = 'red';
+          case 3:
+            let three = this.context.createPattern(smallHerb, 'repeat');
+            this.context.fillStyle = three;
+            this.context.fillRect(
+              col * (this.cellSize + this.padding),
+              row * (this.cellSize + this.padding),
+              this.cellSize,
+              this.cellSize
+            );
             break;
-        }
-        if (cellVal !== 3 && cellVal !== 4 && cellVal !== 5) {
-          this.context.fillStyle = sprite;
-          this.context.fillRect(
-            col * (this.cellSize + this.padding),
-            row * (this.cellSize + this.padding),
-            this.cellSize,
-            this.cellSize
-          );
+          case 4:
+            let four = this.context.createPattern(bigHerb, 'repeat');
+            this.context.fillStyle = four;
+            this.context.fillRect(
+              col * (this.cellSize + this.padding),
+              row * (this.cellSize + this.padding),
+              this.cellSize,
+              this.cellSize
+            );
+            break;
+          case 's':
+            let eight = this.context.createPattern(startScreen, 'repeat');
+            this.context.fillStyle = eight;
+            this.context.fillRect(
+              col * (this.cellSize + this.padding),
+              row * (this.cellSize + this.padding),
+              this.cellSize,
+              this.cellSize
+            );
+            break;
+          case 'ui':
+            let ui = this.context.createPattern(startScreen, 'repeat');
+            this.context.fillStyle = ui;
+            this.context.fillRect(
+              col * (this.cellSize + this.padding),
+              row * (this.cellSize + this.padding),
+              this.cellSize,
+              this.cellSize
+            );
+            break;
+          case 9:
+            let nine = this.context.createPattern(grass, 'no-repeat');
+            this.context.fillStyle = nine;
+            this.context.fillRect(
+              col * (this.cellSize + this.padding),
+              row * (this.cellSize + this.padding),
+              this.cellSize,
+              this.cellSize
+            );
+            break;
         }
       }
     }
@@ -246,7 +281,7 @@ class Game {
   }
 
   draw() {
-    this.context.clearRect(0, 0, 420, 580);
+    this.context.clearRect(0, 0, 640, 860);
     this.drawBackground();
     this.player.draw();
     this.drawHealth();
