@@ -1,24 +1,61 @@
 // images
-const smallHerb = new Image();
-smallHerb.src = '/images/smallherb2.png';
 
-const bigHerb = new Image();
-bigHerb.src = '/images/bigherb2.png';
+const grass = new Image(); //grass a
+grass.src = '/images/tileA.png';
 
-const bigHerbTwo = new Image();
-bigHerbTwo.src = '/images/bigherb2.png';
+const grassTwo = new Image(); //grass 2
+grassTwo.src = '/images/tileB.png';
 
-const grass = new Image();
-grass.src = '/images/grass.png';
+const grassThree = new Image(); //grass 3
+grassThree.src = '/images/tileC.png';
 
-const grassTwo = new Image();
-grassTwo.src = '/images/grass.png';
+const tree = new Image(); //tree
+tree.src = '/images/tileD.png';
 
-const water = new Image();
-water.src = '/images/water.png';
+const treeTwo = new Image(); //tree 2
+treeTwo.src = '/images/tileE.png';
+
+const bush = new Image(); // bush
+bush.src = '/images/tileF.png';
+
+const water = new Image(); // water
+water.src = '/images/tileG.png';
+
+const waterEdge = new Image(); //water edge
+waterEdge.src = '/images/tileH.png';
+
+const herb = new Image(); //  herb
+herb.src = '/images/tileI.png';
+
+const herbTwo = new Image(); // herb two
+herbTwo.src = '/images/tileJ.png';
+
+const enemy = new Image(); // enemy
+enemy.src = '/images/tileK.png';
+
+const enemyTwo = new Image(); // enemy two
+enemyTwo.src = '/images/tileL.png';
+
+const walls = new Image(); // walls
+walls.src = '/images/tileS.png';
+
+const wallsTwo = new Image(); // walls window
+wallsTwo.src = '/images/tileR.png';
+
+const wallsThree = new Image(); // walls door
+wallsThree.src = '/images/tileT.png';
+
+const exit = new Image();
+exit.src = '/images/tileX.png';
+
+const ui = new Image();
+ui.src = '/images/tileZ.png';
 
 const startScreen = new Image();
-startScreen.src = '/images/startscreen.png';
+startScreen.src = '/images/cursedlands_logo.png';
+
+const tutorial = new Image(); // bush
+tutorial.src = '/images/tutorial.png';
 
 // audio
 const herbHeal = new Audio('/sounds/BeepBox-Song.mp3');
@@ -93,23 +130,30 @@ class Game {
   //check if the move is valid by checking the number of the tile on which the player is moving into
   isValidMove(x, y) {
     const cellVal = this.matrix[this.player.y + y][this.player.x + x];
-    return cellVal === 0 || cellVal === 3 || cellVal === 4 || cellVal === 9;
+    return (
+      cellVal === 'a' ||
+      cellVal === 'b' ||
+      cellVal === 'c' ||
+      cellVal === 'i' ||
+      cellVal === 'j' ||
+      cellVal === 'x'
+    );
   }
 
   //check if the player moves into a healing herb
   smallHerb(x, y) {
     const cellVal = this.matrix[this.player.y + y][this.player.x + x];
-    return cellVal === 3;
+    return cellVal === 'i';
   }
 
   bigHerb(x, y) {
     const cellVal = this.matrix[this.player.y + y][this.player.x + x];
-    return cellVal === 4;
+    return cellVal === 'j';
   }
 
   isWin(x, y) {
     const cellVal = this.matrix[this.player.y + y][this.player.x + x];
-    return cellVal === 9;
+    return cellVal === 'x';
   }
 
   //update the matrix grid every time player moves
@@ -125,18 +169,22 @@ class Game {
     switch (event.key) {
       case 'ArrowLeft':
         event.preventDefault();
+        this.player.direction = 'left';
         xMovement = -1;
         break;
       case 'ArrowRight':
         event.preventDefault();
+        this.player.direction = 'right';
         xMovement = 1;
         break;
       case 'ArrowUp':
         event.preventDefault();
+        this.player.direction = 'up';
         yMovement = -1;
         break;
       case 'ArrowDown':
         event.preventDefault();
+        this.player.direction = 'down';
         yMovement = 1;
         break;
     }
@@ -156,12 +204,12 @@ class Game {
         herbHeal.load();
         herbHeal.play();
         this.health = 3;
-        this.updateMatrix(this.player.x, this.player.y, 0);
+        this.updateMatrix(this.player.x, this.player.y, 'a');
       } else if (isABigHerb) {
         herbHeal.load();
         herbHeal.play();
         this.health = 5;
-        this.updateMatrix(this.player.x, this.player.y, 0);
+        this.updateMatrix(this.player.x, this.player.y, 'a');
       } else {
         this.health--;
       }
@@ -188,7 +236,271 @@ class Game {
         //let sprite = '';
 
         switch (cellVal) {
-          case 0:
+          case 'a': // grass
+            let tileA = this.context.createPattern(grass, 'repeat');
+            this.context.fillStyle = tileA;
+            this.context.fillRect(
+              col * (this.cellSize + this.padding),
+              row * (this.cellSize + this.padding),
+              this.cellSize,
+              this.cellSize
+            );
+            break;
+
+          case 'b': // grass 2
+            let tileB = this.context.createPattern(grassTwo, 'repeat');
+            this.context.fillStyle = tileB;
+            this.context.fillRect(
+              col * (this.cellSize + this.padding),
+              row * (this.cellSize + this.padding),
+              this.cellSize,
+              this.cellSize
+            );
+            break;
+
+          case 'c': // grass 3
+            let tileC = this.context.createPattern(grassThree, 'repeat');
+            this.context.fillStyle = tileC;
+            this.context.fillRect(
+              col * (this.cellSize + this.padding),
+              row * (this.cellSize + this.padding),
+              this.cellSize,
+              this.cellSize
+            );
+            break;
+
+          case 'd': // tree
+            let tileD = this.context.createPattern(tree, 'repeat');
+            this.context.fillStyle = tileD;
+            this.context.fillRect(
+              col * (this.cellSize + this.padding),
+              row * (this.cellSize + this.padding),
+              this.cellSize,
+              this.cellSize
+            );
+            break;
+
+          case 'e': // tree 2
+            let tileE = this.context.createPattern(treeTwo, 'repeat');
+            this.context.fillStyle = tileE;
+            this.context.fillRect(
+              col * (this.cellSize + this.padding),
+              row * (this.cellSize + this.padding),
+              this.cellSize,
+              this.cellSize
+            );
+            break;
+
+          case 'f': // bush
+            let tileF = this.context.createPattern(bush, 'repeat');
+            this.context.fillStyle = tileF;
+            this.context.fillRect(
+              col * (this.cellSize + this.padding),
+              row * (this.cellSize + this.padding),
+              this.cellSize,
+              this.cellSize
+            );
+            break;
+
+          case 'g': // water
+            let tileG = this.context.createPattern(water, 'repeat');
+            this.context.fillStyle = tileG;
+            this.context.fillRect(
+              col * (this.cellSize + this.padding),
+              row * (this.cellSize + this.padding),
+              this.cellSize,
+              this.cellSize
+            );
+            break;
+
+          case 'h': // water edge
+            let tileH = this.context.createPattern(waterEdge, 'repeat');
+            this.context.fillStyle = tileH;
+            this.context.fillRect(
+              col * (this.cellSize + this.padding),
+              row * (this.cellSize + this.padding),
+              this.cellSize,
+              this.cellSize
+            );
+            break;
+
+          case 'i': // herb
+            let tileI = this.context.createPattern(herb, 'repeat');
+            this.context.fillStyle = tileI;
+            this.context.fillRect(
+              col * (this.cellSize + this.padding),
+              row * (this.cellSize + this.padding),
+              this.cellSize,
+              this.cellSize
+            );
+            break;
+
+          case 'j': // herb two
+            let tileJ = this.context.createPattern(herbTwo, 'repeat');
+            this.context.fillStyle = tileJ;
+            this.context.fillRect(
+              col * (this.cellSize + this.padding),
+              row * (this.cellSize + this.padding),
+              this.cellSize,
+              this.cellSize
+            );
+            break;
+
+          case 'k': //walking path 1
+            let tileK = this.context.createPattern(enemy, 'repeat');
+            this.context.fillStyle = tileK;
+            this.context.fillRect(
+              col * (this.cellSize + this.padding),
+              row * (this.cellSize + this.padding),
+              this.cellSize,
+              this.cellSize
+            );
+            break;
+
+          case 'l': //walking path 1
+            let tileL = this.context.createPattern(enemyTwo, 'repeat');
+            this.context.fillStyle = tileL;
+            this.context.fillRect(
+              col * (this.cellSize + this.padding),
+              row * (this.cellSize + this.padding),
+              this.cellSize,
+              this.cellSize
+            );
+            break;
+
+          case 'm': //walking path 1
+            let tileM = this.context.createPattern(grass, 'repeat');
+            this.context.fillStyle = tileM;
+            this.context.fillRect(
+              col * (this.cellSize + this.padding),
+              row * (this.cellSize + this.padding),
+              this.cellSize,
+              this.cellSize
+            );
+            break;
+
+          case 'n': //walking path 1
+            let tileN = this.context.createPattern(grass, 'repeat');
+            this.context.fillStyle = tileN;
+            this.context.fillRect(
+              col * (this.cellSize + this.padding),
+              row * (this.cellSize + this.padding),
+              this.cellSize,
+              this.cellSize
+            );
+            break;
+
+          case 'o': //walking path 1
+            let tileO = this.context.createPattern(grass, 'repeat');
+            this.context.fillStyle = tileO;
+            this.context.fillRect(
+              col * (this.cellSize + this.padding),
+              row * (this.cellSize + this.padding),
+              this.cellSize,
+              this.cellSize
+            );
+            break;
+
+          case 'p': //walking path 1
+            let tileP = this.context.createPattern(grass, 'repeat');
+            this.context.fillStyle = tileP;
+            this.context.fillRect(
+              col * (this.cellSize + this.padding),
+              row * (this.cellSize + this.padding),
+              this.cellSize,
+              this.cellSize
+            );
+            break;
+
+          case 'r': //walking path 1
+            let tileR = this.context.createPattern(walls, 'repeat');
+            this.context.fillStyle = tileR;
+            this.context.fillRect(
+              col * (this.cellSize + this.padding),
+              row * (this.cellSize + this.padding),
+              this.cellSize,
+              this.cellSize
+            );
+            break;
+
+          case 's': //walking path 1
+            let tileS = this.context.createPattern(wallsTwo, 'repeat');
+            this.context.fillStyle = tileS;
+            this.context.fillRect(
+              col * (this.cellSize + this.padding),
+              row * (this.cellSize + this.padding),
+              this.cellSize,
+              this.cellSize
+            );
+            break;
+
+          case 't': //walking path 1
+            let tileT = this.context.createPattern(wallsThree, 'repeat');
+            this.context.fillStyle = tileT;
+            this.context.fillRect(
+              col * (this.cellSize + this.padding),
+              row * (this.cellSize + this.padding),
+              this.cellSize,
+              this.cellSize
+            );
+            break;
+
+          case 'w': //walking path 1
+            let tileW = this.context.createPattern(grass, 'repeat');
+            this.context.fillStyle = tileW;
+            this.context.fillRect(
+              col * (this.cellSize + this.padding),
+              row * (this.cellSize + this.padding),
+              this.cellSize,
+              this.cellSize
+            );
+            break;
+
+          case 'x': //walking path 1
+            let tileX = this.context.createPattern(exit, 'repeat');
+            this.context.fillStyle = tileX;
+            this.context.fillRect(
+              col * (this.cellSize + this.padding),
+              row * (this.cellSize + this.padding),
+              this.cellSize,
+              this.cellSize
+            );
+            break;
+
+          case 'y': //walking path 1
+            let tileY = this.context.createPattern(startScreen, 'repeat');
+            this.context.fillStyle = tileY;
+            this.context.fillRect(
+              col * (this.cellSize + this.padding),
+              row * (this.cellSize + this.padding),
+              this.cellSize,
+              this.cellSize
+            );
+            break;
+
+          case 'v': //walking path 1
+            let tileV = this.context.createPattern(tutorial, 'repeat');
+            this.context.fillStyle = tileV;
+            this.context.fillRect(
+              col * (this.cellSize + this.padding),
+              row * (this.cellSize + this.padding),
+              this.cellSize,
+              this.cellSize
+            );
+            break;
+
+          case 'z': //walking path 1
+            let tileZ = this.context.createPattern(ui, 'repeat');
+            this.context.fillStyle = tileZ;
+            this.context.fillRect(
+              col * (this.cellSize + this.padding),
+              row * (this.cellSize + this.padding),
+              this.cellSize,
+              this.cellSize
+            );
+            break;
+
+          /* case 0:
             let zero = this.context.createPattern(grass, 'repeat');
             this.context.fillStyle = zero;
             this.context.fillRect(
@@ -238,7 +550,7 @@ class Game {
               this.cellSize
             );
             break;
-          case 's':
+          case 'y':
             let eight = this.context.createPattern(startScreen, 'repeat');
             this.context.fillStyle = eight;
             this.context.fillRect(
@@ -267,21 +579,21 @@ class Game {
               this.cellSize,
               this.cellSize
             );
-            break;
+            break;*/
         }
       }
     }
   }
 
   drawHealth() {
-    this.context.font = '25px monospace';
-    this.context.fillStyle = 'white';
-    this.context.fillText(`Health: ${this.health}`, 20, 30);
-    this.context.fillText(`Level: ${this.level}`, 200, 30);
+    this.context.font = '35px luminari';
+    this.context.fillStyle = '#c4a4a4';
+    this.context.fillText(`Health: ${this.health}`, 200, 40);
+    this.context.fillText(`Level: ${this.level}`, 450, 40);
   }
 
   draw() {
-    this.context.clearRect(0, 0, 640, 860);
+    this.context.clearRect(0, 0, 768, 768);
     this.drawBackground();
     this.player.draw();
     this.drawHealth();
