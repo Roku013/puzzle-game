@@ -12,16 +12,6 @@ body {
   font-family: monospace;
 }
 
-/*.screen {
-  background-color: white;
-  width: 500px;
-  height: 500px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}*/
-
 canvas {
 }
 

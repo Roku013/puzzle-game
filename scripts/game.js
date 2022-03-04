@@ -58,19 +58,9 @@ const tutorial = new Image(); // bush
 tutorial.src = '/images/tutorial.png';
 
 // audio
-const herbHeal = new Audio('/sounds/BeepBox-Song.mp3');
-const mainSong = new Audio('/sounds/mainsong.mp3');
-
-/*function itemLocation(array2d, itemToFind) {
-  index = [].concat.apply([], [].concat.apply([], array2d)).indexOf(itemToFind);
-  if (index === -1) {
-    return false;
-  }
-  numColumns = array2d[0].length;
-  row = parseInt(index / numColumns);
-  col = index % numColumns;
-  return [row, col];
-}*/
+const plantHeal = new Audio('/sounds/heal.mp3');
+const win = new Audio('/sounds/win.mp3');
+const lose = new Audio('/sounds/lose.mp3');
 
 //base for creating a level
 class Game {
@@ -103,6 +93,8 @@ class Game {
 
   lose() {
     this.lost = true;
+    lose.load();
+    lose.play();
     ifLostLevel(levels[this.level], this.lost, this.level);
     this.reset();
   }
@@ -191,23 +183,24 @@ class Game {
 
     const isValid = this.isValidMove(xMovement, yMovement);
     const isWin = this.isWin(xMovement, yMovement);
-    const isASmallHerb = this.smallHerb(xMovement, yMovement);
-    const isABigHerb = this.bigHerb(xMovement, yMovement);
+    const isSmallPlant = this.smallHerb(xMovement, yMovement);
+    const isBigPlant = this.bigHerb(xMovement, yMovement);
 
     if (isWin) {
-      herbHeal.play();
+      win.load();
+      win.play();
       this.win();
     } else if (isValid) {
       this.player.y += yMovement;
       this.player.x += xMovement;
-      if (isASmallHerb) {
-        herbHeal.load();
-        herbHeal.play();
+      if (isSmallPlant) {
+        plantHeal.load();
+        plantHeal.play();
         this.health = 3;
         this.updateMatrix(this.player.x, this.player.y, 'a');
-      } else if (isABigHerb) {
-        herbHeal.load();
-        herbHeal.play();
+      } else if (isBigPlant) {
+        plantHeal.load();
+        plantHeal.play();
         this.health = 5;
         this.updateMatrix(this.player.x, this.player.y, 'a');
       } else {
