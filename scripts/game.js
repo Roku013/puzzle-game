@@ -18,12 +18,6 @@ treeTwo.src = '/images/tileE.png';
 const bush = new Image(); // bush
 bush.src = '/images/tileF.png';
 
-const water = new Image(); // water
-water.src = '/images/tileG.png';
-
-const waterEdge = new Image(); //water edge
-waterEdge.src = '/images/tileH.png';
-
 const herb = new Image(); //  herb
 herb.src = '/images/tileI.png';
 
@@ -56,6 +50,9 @@ startScreen.src = '/images/cursedlands_logo.png';
 
 const tutorial = new Image(); // bush
 tutorial.src = '/images/tutorial.png';
+
+const enemiesTutorial = new Image(); // bush
+enemiesTutorial.src = '/images/enemiestutorial.png';
 
 // audio
 const plantHeal = new Audio('/sounds/heal.mp3');
@@ -128,6 +125,8 @@ class Game {
       cellVal === 'c' ||
       cellVal === 'i' ||
       cellVal === 'j' ||
+      cellVal === 'k' ||
+      cellVal === 'l' ||
       cellVal === 'x'
     );
   }
@@ -141,6 +140,16 @@ class Game {
   bigHerb(x, y) {
     const cellVal = this.matrix[this.player.y + y][this.player.x + x];
     return cellVal === 'j';
+  }
+
+  smallEnemy(x, y) {
+    const cellVal = this.matrix[this.player.y + y][this.player.x + x];
+    return cellVal === 'l';
+  }
+
+  bigEnemy(x, y) {
+    const cellVal = this.matrix[this.player.y + y][this.player.x + x];
+    return cellVal === 'k';
   }
 
   isWin(x, y) {
@@ -185,6 +194,8 @@ class Game {
     const isWin = this.isWin(xMovement, yMovement);
     const isSmallPlant = this.smallHerb(xMovement, yMovement);
     const isBigPlant = this.bigHerb(xMovement, yMovement);
+    const isSmallEnemy = this.smallEnemy(xMovement, yMovement);
+    const isBigEnemy = this.bigEnemy(xMovement, yMovement);
 
     if (isWin) {
       win.load();
@@ -202,6 +213,16 @@ class Game {
         plantHeal.load();
         plantHeal.play();
         this.health = 5;
+        this.updateMatrix(this.player.x, this.player.y, 'a');
+      } else if (isSmallEnemy) {
+        plantHeal.load();
+        plantHeal.play();
+        this.health -= 2;
+        this.updateMatrix(this.player.x, this.player.y, 'a');
+      } else if (isBigEnemy) {
+        plantHeal.load();
+        plantHeal.play();
+        this.health -= 4;
         this.updateMatrix(this.player.x, this.player.y, 'a');
       } else {
         this.health--;
@@ -295,28 +316,6 @@ class Game {
             );
             break;
 
-          case 'g': // water
-            let tileG = this.context.createPattern(water, 'repeat');
-            this.context.fillStyle = tileG;
-            this.context.fillRect(
-              col * (this.cellSize + this.padding),
-              row * (this.cellSize + this.padding),
-              this.cellSize,
-              this.cellSize
-            );
-            break;
-
-          case 'h': // water edge
-            let tileH = this.context.createPattern(waterEdge, 'repeat');
-            this.context.fillStyle = tileH;
-            this.context.fillRect(
-              col * (this.cellSize + this.padding),
-              row * (this.cellSize + this.padding),
-              this.cellSize,
-              this.cellSize
-            );
-            break;
-
           case 'i': // herb
             let tileI = this.context.createPattern(herb, 'repeat');
             this.context.fillStyle = tileI;
@@ -339,7 +338,7 @@ class Game {
             );
             break;
 
-          case 'k': //walking path 1
+          case 'k': // enemy
             let tileK = this.context.createPattern(enemy, 'repeat');
             this.context.fillStyle = tileK;
             this.context.fillRect(
@@ -350,7 +349,7 @@ class Game {
             );
             break;
 
-          case 'l': //walking path 1
+          case 'l': // enemy two
             let tileL = this.context.createPattern(enemyTwo, 'repeat');
             this.context.fillStyle = tileL;
             this.context.fillRect(
@@ -438,8 +437,8 @@ class Game {
             );
             break;
 
-          case 'w': //walking path 1
-            let tileW = this.context.createPattern(grass, 'repeat');
+          case 'w': // enemy tutorial
+            let tileW = this.context.createPattern(enemiesTutorial, 'repeat');
             this.context.fillStyle = tileW;
             this.context.fillRect(
               col * (this.cellSize + this.padding),

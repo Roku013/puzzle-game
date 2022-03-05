@@ -10,10 +10,6 @@ playerUp.src = '/images/playerUp.png';
 const playerDown = new Image();
 playerDown.src = '/images/playerDown.png';
 
-const animatedPlayer = new Image();
-animatedPlayer.src =
-  '/images/drizzile___sprite_overworld_by_wolfang62_ddlb6uu-fullview.png';
-
 class Player {
   constructor(game, x, y) {
     this.game = game;
