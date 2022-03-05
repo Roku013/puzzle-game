@@ -30,6 +30,9 @@ enemy.src = '/images/tileK.png';
 const enemyTwo = new Image(); // enemy two
 enemyTwo.src = '/images/tileL.png';
 
+const mainBoss = new Image(); // bush
+mainBoss.src = '/images/mainboss.png';
+
 const walls = new Image(); // walls
 walls.src = '/images/tileS.png';
 
@@ -54,10 +57,14 @@ tutorial.src = '/images/tutorial.png';
 const enemiesTutorial = new Image(); // bush
 enemiesTutorial.src = '/images/enemiestutorial.png';
 
+const endScreen = new Image(); // bush
+endScreen.src = '/images/endscreen.png';
+
 // audio
 const plantHeal = new Audio('/sounds/heal.mp3');
 const win = new Audio('/sounds/win.mp3');
 const lose = new Audio('/sounds/lose.mp3');
+const fight = new Audio('/sounds/enemy.mp3');
 
 //base for creating a level
 class Game {
@@ -215,13 +222,13 @@ class Game {
         this.health = 5;
         this.updateMatrix(this.player.x, this.player.y, 'a');
       } else if (isSmallEnemy) {
-        plantHeal.load();
-        plantHeal.play();
+        fight.load();
+        fight.play();
         this.health -= 2;
         this.updateMatrix(this.player.x, this.player.y, 'a');
       } else if (isBigEnemy) {
-        plantHeal.load();
-        plantHeal.play();
+        fight.load();
+        fight.play();
         this.health -= 4;
         this.updateMatrix(this.player.x, this.player.y, 'a');
       } else {
@@ -361,7 +368,7 @@ class Game {
             break;
 
           case 'm': //walking path 1
-            let tileM = this.context.createPattern(grass, 'repeat');
+            let tileM = this.context.createPattern(mainBoss, 'repeat');
             this.context.fillStyle = tileM;
             this.context.fillRect(
               col * (this.cellSize + this.padding),
@@ -473,6 +480,17 @@ class Game {
           case 'v': //walking path 1
             let tileV = this.context.createPattern(tutorial, 'repeat');
             this.context.fillStyle = tileV;
+            this.context.fillRect(
+              col * (this.cellSize + this.padding),
+              row * (this.cellSize + this.padding),
+              this.cellSize,
+              this.cellSize
+            );
+            break;
+
+          case 'u': //walking path 1
+            let tileU = this.context.createPattern(endScreen, 'repeat');
+            this.context.fillStyle = tileU;
             this.context.fillRect(
               col * (this.cellSize + this.padding),
               row * (this.cellSize + this.padding),
