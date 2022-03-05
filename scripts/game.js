@@ -51,10 +51,10 @@ ui.src = '/images/tileZ.png';
 const startScreen = new Image();
 startScreen.src = '/images/cursedlands_logo.png';
 
-const tutorial = new Image(); // bush
+const tutorial = new Image(); // tutorial
 tutorial.src = '/images/tutorial.png';
 
-const enemiesTutorial = new Image(); // bush
+const enemiesTutorial = new Image(); // enemies tutorial
 enemiesTutorial.src = '/images/enemiestutorial.png';
 
 const endScreen = new Image(); // bush
@@ -90,7 +90,6 @@ class Game {
   }
 
   start() {
-    //mainSong.play();
     this.reset();
     this.loop();
   }
@@ -367,7 +366,7 @@ class Game {
             );
             break;
 
-          case 'm': //walking path 1
+          case 'm': // main boss
             let tileM = this.context.createPattern(mainBoss, 'repeat');
             this.context.fillStyle = tileM;
             this.context.fillRect(
@@ -378,40 +377,7 @@ class Game {
             );
             break;
 
-          case 'n': //walking path 1
-            let tileN = this.context.createPattern(grass, 'repeat');
-            this.context.fillStyle = tileN;
-            this.context.fillRect(
-              col * (this.cellSize + this.padding),
-              row * (this.cellSize + this.padding),
-              this.cellSize,
-              this.cellSize
-            );
-            break;
-
-          case 'o': //walking path 1
-            let tileO = this.context.createPattern(grass, 'repeat');
-            this.context.fillStyle = tileO;
-            this.context.fillRect(
-              col * (this.cellSize + this.padding),
-              row * (this.cellSize + this.padding),
-              this.cellSize,
-              this.cellSize
-            );
-            break;
-
-          case 'p': //walking path 1
-            let tileP = this.context.createPattern(grass, 'repeat');
-            this.context.fillStyle = tileP;
-            this.context.fillRect(
-              col * (this.cellSize + this.padding),
-              row * (this.cellSize + this.padding),
-              this.cellSize,
-              this.cellSize
-            );
-            break;
-
-          case 'r': //walking path 1
+          case 'r': // walls window
             let tileR = this.context.createPattern(walls, 'repeat');
             this.context.fillStyle = tileR;
             this.context.fillRect(
@@ -422,7 +388,7 @@ class Game {
             );
             break;
 
-          case 's': //walking path 1
+          case 's': // walls
             let tileS = this.context.createPattern(wallsTwo, 'repeat');
             this.context.fillStyle = tileS;
             this.context.fillRect(
@@ -433,7 +399,7 @@ class Game {
             );
             break;
 
-          case 't': //walking path 1
+          case 't': // walls door
             let tileT = this.context.createPattern(wallsThree, 'repeat');
             this.context.fillStyle = tileT;
             this.context.fillRect(
@@ -455,7 +421,7 @@ class Game {
             );
             break;
 
-          case 'x': //walking path 1
+          case 'x': // level exit
             let tileX = this.context.createPattern(exit, 'repeat');
             this.context.fillStyle = tileX;
             this.context.fillRect(
@@ -466,7 +432,7 @@ class Game {
             );
             break;
 
-          case 'y': //walking path 1
+          case 'y': // starting screen
             let tileY = this.context.createPattern(startScreen, 'repeat');
             this.context.fillStyle = tileY;
             this.context.fillRect(
@@ -477,7 +443,7 @@ class Game {
             );
             break;
 
-          case 'v': //walking path 1
+          case 'v': // tutorial
             let tileV = this.context.createPattern(tutorial, 'repeat');
             this.context.fillStyle = tileV;
             this.context.fillRect(
@@ -488,7 +454,7 @@ class Game {
             );
             break;
 
-          case 'u': //walking path 1
+          case 'u': // end screen
             let tileU = this.context.createPattern(endScreen, 'repeat');
             this.context.fillStyle = tileU;
             this.context.fillRect(
@@ -499,7 +465,7 @@ class Game {
             );
             break;
 
-          case 'z': //walking path 1
+          case 'z': // UI
             let tileZ = this.context.createPattern(ui, 'repeat');
             this.context.fillStyle = tileZ;
             this.context.fillRect(
@@ -509,87 +475,6 @@ class Game {
               this.cellSize
             );
             break;
-
-          /* case 0:
-            let zero = this.context.createPattern(grass, 'repeat');
-            this.context.fillStyle = zero;
-            this.context.fillRect(
-              col * (this.cellSize + this.padding),
-              row * (this.cellSize + this.padding),
-              this.cellSize,
-              this.cellSize
-            );
-            break;
-          case 1:
-            let one = this.context.createPattern(water, 'repeat');
-            this.context.fillStyle = one;
-            this.context.fillRect(
-              col * (this.cellSize + this.padding),
-              row * (this.cellSize + this.padding),
-              this.cellSize,
-              this.cellSize
-            );
-            break;
-          case 2:
-            let two = this.context.createPattern(water, 'repeat');
-            this.context.fillStyle = two;
-            this.context.fillRect(
-              col * (this.cellSize + this.padding),
-              row * (this.cellSize + this.padding),
-              this.cellSize,
-              this.cellSize
-            );
-            break;
-          case 3:
-            let three = this.context.createPattern(smallHerb, 'repeat');
-            this.context.fillStyle = three;
-            this.context.fillRect(
-              col * (this.cellSize + this.padding),
-              row * (this.cellSize + this.padding),
-              this.cellSize,
-              this.cellSize
-            );
-            break;
-          case 4:
-            let four = this.context.createPattern(bigHerb, 'repeat');
-            this.context.fillStyle = four;
-            this.context.fillRect(
-              col * (this.cellSize + this.padding),
-              row * (this.cellSize + this.padding),
-              this.cellSize,
-              this.cellSize
-            );
-            break;
-          case 'y':
-            let eight = this.context.createPattern(startScreen, 'repeat');
-            this.context.fillStyle = eight;
-            this.context.fillRect(
-              col * (this.cellSize + this.padding),
-              row * (this.cellSize + this.padding),
-              this.cellSize,
-              this.cellSize
-            );
-            break;
-          case 'ui':
-            let ui = this.context.createPattern(startScreen, 'repeat');
-            this.context.fillStyle = ui;
-            this.context.fillRect(
-              col * (this.cellSize + this.padding),
-              row * (this.cellSize + this.padding),
-              this.cellSize,
-              this.cellSize
-            );
-            break;
-          case 9:
-            let nine = this.context.createPattern(grass, 'no-repeat');
-            this.context.fillStyle = nine;
-            this.context.fillRect(
-              col * (this.cellSize + this.padding),
-              row * (this.cellSize + this.padding),
-              this.cellSize,
-              this.cellSize
-            );
-            break;*/
         }
       }
     }
