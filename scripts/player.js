@@ -62,26 +62,6 @@ class Player {
           this.game.cellSize
         );
         break;
-        break;
     }
-    /*this.frame++;
-    this.game.context.drawImage(
-      animatedPlayer,
-      64 * (this.frame % 4),
-      64,
-      this.game.cellSize,
-      this.game.cellSize,
-      this.x * (this.game.cellSize + this.game.padding),
-      this.y * (this.game.cellSize + this.game.padding),
-      this.game.cellSize,
-      this.game.cellSize
-    );
-    /*this.game.context.drawImage(
-      playerAvatar,
-      this.x * (this.game.cellSize + this.game.padding),
-      this.y * (this.game.cellSize + this.game.padding),
-      this.game.cellSize,
-      this.game.cellSize
-    );*/
   }
 }

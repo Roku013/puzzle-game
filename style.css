@@ -11,14 +11,3 @@ body {
   justify-content: center;
   font-family: monospace;
 }
-
-canvas {
-}
-
-button {
-  font: inherit;
-  background-color: green;
-  color: white;
-  border: 0;
-  padding: 1em;
-}
